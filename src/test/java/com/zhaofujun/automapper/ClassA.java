@@ -2,7 +2,7 @@ package com.zhaofujun.automapper;
 
 public class ClassA {
     private String a;
-    private boolean b;
+    private Boolean b;
     private long c;
     private byte d;
 
@@ -14,11 +14,11 @@ public class ClassA {
         this.a = a;
     }
 
-    public boolean isB() {
+    public Boolean getB() {
         return b;
     }
 
-    public void setB(boolean b) {
+    public void setB(Boolean b) {
         this.b = b;
     }
 

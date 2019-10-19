@@ -15,6 +15,7 @@ public class ClassB {
         this.a = a;
     }
 
+
     public boolean isB1() {
         return b1;
     }

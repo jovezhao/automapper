@@ -16,7 +16,6 @@ public class MapperTest {
         classA.setD(Byte.decode("2"));
 
         ClassB classB = mapper.map(classA, ClassB.class);
-
         System.out.println(classB);
 
 

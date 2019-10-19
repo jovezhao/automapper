@@ -4,6 +4,7 @@ import com.zhaofujun.automapper.builder.ClassMappingBuilder;
 import com.zhaofujun.automapper.builder.DefaultClassMappingBuilder;
 import com.zhaofujun.automapper.mapping.ClassMappingManager;
 import com.zhaofujun.automapper.mapping.FieldMapping;
+import com.zhaofujun.automapper.reflect.BeanUtils;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class AutoMapper implements IMapper {
             try {
                 Object value = p.getSourceGetter().invoke(source);
                 if (p.getTargetSetter() != null)
-                    p.getTargetSetter().invoke(target, value);
+                    p.getTargetSetter().invoke(target, BeanUtils.parseValue(value, p.getSourceField().getType(), p.getTargetField().getType()));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
