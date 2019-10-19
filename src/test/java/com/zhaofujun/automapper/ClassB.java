@@ -2,7 +2,10 @@ package com.zhaofujun.automapper;
 
 public class ClassB {
     private String a;
-    private String b1;
+    private boolean b1;
+    private int c;
+    private long d;
+
 
     public String getA() {
         return a;
@@ -12,19 +15,27 @@ public class ClassB {
         this.a = a;
     }
 
-    public String getB1() {
+    public boolean isB1() {
         return b1;
     }
 
-    public void setB1(String b1) {
+    public void setB1(boolean b1) {
         this.b1 = b1;
     }
 
-    @Override
-    public String toString() {
-        return "ClassB{" +
-                "a='" + a + '\'' +
-                ", b1='" + b1 + '\'' +
-                '}';
+    public int getC() {
+        return c;
+    }
+
+    public void setC(int c) {
+        this.c = c;
+    }
+
+    public long getD() {
+        return d;
+    }
+
+    public void setD(long d) {
+        this.d = d;
     }
 }

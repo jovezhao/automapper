@@ -13,21 +13,37 @@ public class AutoMapper implements IMapper {
 
     @Override
     public void map(Object source, Object target) {
+        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass());
+        fieldMappingList.forEach(p -> {
+            try {
+                Object value = p.getSourceGetter().invoke(source);
+                if (p.getTargetSetter() != null)
+                    p.getTargetSetter().invoke(target, value);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
     }
 
     @Override
     public <T> T map(Object source, Class<T> targetClass) {
-        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), targetClass);
-        return null;
+        try {
+            T target = targetClass.getConstructor().newInstance();
+            map(source, target);
+            return target;
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     @Override
-    public ClassMappingBuilder mapping(Class sourceClass,Class targetClass) {
-        return mapping(sourceClass,targetClass, false);
+    public ClassMappingBuilder mapping(Class sourceClass, Class targetClass) {
+        return mapping(sourceClass, targetClass, false);
     }
 
     @Override
-    public ClassMappingBuilder mapping(Class sourceClass,Class targetClass, boolean allowPrivate) {
+    public ClassMappingBuilder mapping(Class sourceClass, Class targetClass, boolean allowPrivate) {
 
         ClassMappingBuilder classBuilder = new DefaultClassMappingBuilder(sourceClass, targetClass, allowPrivate);
 

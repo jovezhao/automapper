@@ -7,16 +7,21 @@ public class MapperTest {
 
 
         mapper.mapping(ClassA.class, ClassB.class)
-                .field("a1", "b1");
+                .field("b", "b1");
 
         ClassA classA = new ClassA();
         classA.setA("a");
-        classA.setA1(Boolean.TRUE);
-        classA.setA2(true);
+        classA.setB(Boolean.TRUE);
+        classA.setC(11);
+        classA.setD(Byte.decode("2"));
 
         ClassB classB = mapper.map(classA, ClassB.class);
 
         System.out.println(classB);
+
+
+
+
     }
 }
 
