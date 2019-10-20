@@ -1,4 +1,4 @@
-package com.zhaofujun.automapper.converters;
+package com.zhaofujun.automapper.map;
 
 public class BaseAndWrapper {
     private Class baseClass;

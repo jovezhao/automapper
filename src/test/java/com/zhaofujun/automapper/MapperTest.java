@@ -11,14 +11,12 @@ public class MapperTest {
 
         ClassA classA = new ClassA();
         classA.setA("a");
-        classA.setB(Boolean.TRUE);
+        classA.setB("true");
         classA.setC(11);
         classA.setD(Byte.decode("2"));
 
         ClassB classB = mapper.map(classA, ClassB.class);
         System.out.println(classB);
-
-
 
 
     }

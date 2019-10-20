@@ -1,4 +1,4 @@
-package com.zhaofujun.automapper.converters;
+package com.zhaofujun.automapper.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +19,15 @@ public class TypeManager {
 
 
     public static boolean isWrapper(Class clazz) {
-        if (clazz.getName().startsWith("java.lang."))
-            return true;
-        return false;
+        return baseAndWrappers.stream()
+                .filter(p -> p.getWrapperClass().equals(clazz))
+                .count() > 0;
+    }
+
+    public static boolean isBase(Class clazz) {
+        return baseAndWrappers.stream()
+                .filter(p -> p.getBaseClass().equals(clazz))
+                .count() > 0;
     }
 
     public static Class getWrapperClass(Class clazz) {

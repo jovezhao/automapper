@@ -1,7 +1,5 @@
 package com.zhaofujun.automapper.reflect;
 
-import com.zhaofujun.automapper.converters.TypeManager;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -54,24 +52,5 @@ public class BeanUtils {
     }
 
 
-    public static Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
-        // 先判断两个类型是否一致，如果一致，直接使用
-        if (valueClass.equals(targetClass))
-            return value;
 
-        // 如果目标是字符串，直接使用tostring返回
-        if (targetClass.equals(String.class))
-            return value.toString();
-
-        // 如果目标类型是源类型的包装器,通过包装器类型的valueOf静态方法创建对象
-        if (targetClass.equals(TypeManager.getWrapperClass(valueClass)))
-            return targetClass.getDeclaredMethod("valueOf",valueClass).invoke(null,value);
-
-        // 如果源类类型是包装器，目标类型是基础类型，可以直接返回
-        if (valueClass.equals(TypeManager.getWrapperClass(targetClass)))
-            return value;
-
-
-        return null;
-    }
 }
