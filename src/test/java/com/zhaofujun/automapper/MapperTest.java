@@ -6,17 +6,20 @@ public class MapperTest {
         IMapper mapper = new AutoMapper();
 
 
-        mapper.mapping(ClassA.class, ClassB.class)
-                .field("b", "b1");
+        mapper.mapping(UserDto.class, UserDo.class)
+                .field("contactAddress", "contact.address")
+                .field("contactTel", "contact.tel");
 
-        ClassA classA = new ClassA();
-        classA.setA("a");
-        classA.setB("true");
-        classA.setC(11);
-        classA.setD(Byte.decode("2"));
+        UserDto dto = new UserDto();
+        dto.setAge(1);
+        dto.setContactAddress("address");
+        dto.setContactTel("tel");
+        dto.setId("11");
+        dto.setName("name");
+        dto.setSex(true);
 
-        ClassB classB = mapper.map(classA, ClassB.class);
-        System.out.println(classB);
+        UserDo userDo = mapper.map(dto, UserDo.class);
+        System.out.println(userDo);
 
 
     }

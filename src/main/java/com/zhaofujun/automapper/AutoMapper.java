@@ -18,16 +18,17 @@ public class AutoMapper implements IMapper {
     public void map(Object source, Object target) {
         List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass());
         fieldMappingList.forEach(p -> {
-            try {
-                Object value = p.getSourceGetter().invoke(source);
-                if (p.getTargetSetter() != null)
-                    p.getTargetSetter().invoke(target, parseValue(value, p.getSourceField().getType(), p.getTargetField().getType()));
+            try { //
+                Object value = p.getSourceField().getValue(source);
+                if (p.getTargetField().getSetterMethod() != null)
+                    p.getTargetField().getSetterMethod().invoke(target, parseValue(value, p.getSourceField().getField().getType(), p.getTargetField().getField().getType()));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
     }
+
 
     @Override
     public <T> T map(Object source, Class<T> targetClass) {
@@ -40,6 +41,7 @@ public class AutoMapper implements IMapper {
         }
     }
 
+
     @Override
     public ClassMappingBuilder mapping(Class sourceClass, Class targetClass) {
         return mapping(sourceClass, targetClass, false);
@@ -50,11 +52,10 @@ public class AutoMapper implements IMapper {
 
         ClassMappingBuilder classBuilder = new DefaultClassMappingBuilder(sourceClass, targetClass, allowPrivate);
 
-        classMappingManager.addClassMapping(classBuilder.builder());
+        classMappingManager.addClassMapping(classBuilder.getClassMapping());
 
         return classBuilder;
     }
-
 
     private Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
         // 先判断两个类型是否一致，如果一致，直接使用

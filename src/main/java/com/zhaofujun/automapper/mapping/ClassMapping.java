@@ -1,6 +1,8 @@
 package com.zhaofujun.automapper.mapping;
 
 import com.zhaofujun.automapper.reflect.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -10,11 +12,12 @@ import java.util.stream.Stream;
 
 public class ClassMapping {
 
+    private Logger logger = LoggerFactory.getLogger(ClassMapping.class);
 
     private Class sourceClass;
     private Class targetClass;
     private boolean allowNoSetter;
-    private Map<Field, FieldMapping> fieldMappingItemMap;
+    private Map<String, FieldMapping> fieldMappingItemMap;
 
     public ClassMapping(Class sourceClass, Class targetClass) {
         this(sourceClass, targetClass, false);
@@ -27,9 +30,13 @@ public class ClassMapping {
         fieldMappingItemMap = new HashMap<>();
 
         for (Field field : BeanUtils.getAllFields(targetClass)) {
-            fieldMappingItemMap.put(field, new FieldMapping(field, sourceClass));
+            try {
+                FieldInfo targetField = FieldInfo.create(targetClass, field.getName());
+                fieldMappingItemMap.put(field.getName(), new FieldMapping(targetField, sourceClass));
+            } catch (NotFoundFieldException ex) {
+                logger.info("没有找到字段", ex);
+            }
         }
-
     }
 
 
@@ -54,14 +61,21 @@ public class ClassMapping {
 
         if (!allowNoSetter) {
             fieldMappingStream = fieldMappingStream
-                    .filter(p -> p.getTargetSetter() != null && p.getTargetSetter() != null);
+                    .filter(p -> p.getTargetField().getSetterMethod() != null && p.getTargetField().getSetterMethod() != null);
         }
         return fieldMappingStream.collect(Collectors.toList());
 
     }
 
-    public FieldMapping getFieldMapping(Field targetField){
-       return fieldMappingItemMap.get(targetField);
+    public FieldMapping getFieldMapping(String targetFieldName) {
+        return fieldMappingItemMap.get(targetFieldName);
+    }
+
+    public FieldMapping createFieldMapping(String targetFieldName) throws NotFoundFieldException {
+        FieldInfo targetField = FieldInfo.create(targetClass, targetFieldName);
+        FieldMapping fieldMapping = new FieldMapping(targetField, sourceClass);
+        fieldMappingItemMap.put(targetFieldName, fieldMapping);
+        return fieldMapping;
     }
 }
 

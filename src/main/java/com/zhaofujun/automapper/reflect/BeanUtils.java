@@ -20,6 +20,9 @@ public class BeanUtils {
 
     //获取bean中字段的setter方法
     public static Method getSetter(Field field) {
+
+        if(field==null) return null;
+
         try {
             Class fieldType = field.getType();// 返回参数类型
             StringBuilder sb = new StringBuilder();
@@ -34,6 +37,7 @@ public class BeanUtils {
 
     //获取bean中字段的getter方法
     public static Method getGetter(Field field) {
+        if(field==null) return null;
         try {
             Class fieldType = field.getType();// 返回参数类型
             StringBuilder sb = new StringBuilder();
