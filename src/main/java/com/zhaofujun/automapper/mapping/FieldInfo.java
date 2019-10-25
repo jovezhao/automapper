@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class FieldInfo {
@@ -34,6 +35,11 @@ public class FieldInfo {
             fieldInfo.next = create(field.getType(), mappingField.substring(i + 1, mappingField.length()));
         }
         return fieldInfo;
+    }
+
+    public Class getNextType() {
+        if (next == null) return field.getType();
+        return next.getNextType();
     }
 
     private FieldInfo() {
@@ -68,21 +74,54 @@ public class FieldInfo {
     }
 
     public Object getValue(Object object) {
-        Object value = null;
+        Object value = this.getFieldValue(object);
 
-        try {
-            if (this.getGetterMethod() != null)
-                value = this.getGetterMethod().invoke(object);
-        } catch (Exception ex) {
-            logger.info("调用getter方法失败");
-        }
         if (this.next != null && value != null) {
             return next.getValue(value);
         }
         return value;
     }
 
-    public void setValue(Object object, Object value) {
+    public void setValue(Object object, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        if (this.next == null) {
+            setFieldValue(object, value);
+            return;
+        }
+        //如果有子字段，并且当前字段值为空，先使用默认构造函数生成一个
+        Object fieldValue = getFieldValue(object);
+        if (fieldValue == null) {
+            fieldValue = field.getType().getConstructor().newInstance();
+            this.setFieldValue(object, fieldValue);
+        }
+        this.next.setValue(fieldValue, value);
 
+    }
+
+
+    private void setFieldValue(Object object, Object value) {
+        try {
+            if (this.getSetterMethod() != null) {
+                this.getSetterMethod().invoke(object, value);
+            } else {
+                this.getField().setAccessible(true);
+                this.getField().set(object, value);
+            }
+        } catch (Exception ex) {
+            logger.info("赋值时发生异常");
+            ex.printStackTrace();
+        }
+    }
+
+    private Object getFieldValue(Object object) {
+        try {
+            if (this.getGetterMethod() != null) {
+                return this.getGetterMethod().invoke(object);
+            } else {
+                this.getField().setAccessible(true);
+                return this.getField().get(object);
+            }
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

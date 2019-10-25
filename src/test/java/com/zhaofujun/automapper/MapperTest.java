@@ -13,7 +13,7 @@ public class MapperTest {
         UserDto dto = new UserDto();
         dto.setAge(1);
         dto.setContactAddress("address");
-        dto.setContactTel("tel");
+        dto.setContactTel("123");
         dto.setId("11");
         dto.setName("name");
         dto.setSex(true);

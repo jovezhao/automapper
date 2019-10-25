@@ -20,8 +20,10 @@ public class AutoMapper implements IMapper {
         fieldMappingList.forEach(p -> {
             try { //
                 Object value = p.getSourceField().getValue(source);
-                if (p.getTargetField().getSetterMethod() != null)
-                    p.getTargetField().getSetterMethod().invoke(target, parseValue(value, p.getSourceField().getField().getType(), p.getTargetField().getField().getType()));
+
+                Object newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType());
+                p.getTargetField().setValue(target, newValue);
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
