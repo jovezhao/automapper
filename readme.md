@@ -9,7 +9,7 @@
 IMapper mapper = new AutoMapper();
 UserDo userDo = mapper.map(dto, UserDo.class);
 ```
-> 直接使用automapper进行对象转换时，automapper将使用默认的转换规则进行转换，具体转换规则见 [默认转换规则](#3.2 默认转换规则)
+> 直接使用automapper进行对象转换时，automapper将使用默认的转换规则进行转换，具体转换规则见 [默认转换规则](#32-默认转换规则)
 
 
 ## 3. 转换演示
