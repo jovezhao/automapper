@@ -305,7 +305,7 @@ public class Contact {
     }
 ```
 
-### 3.7 简单对象映射对复杂对象
+### 3.7 简单对象映射到复杂对象
 
 当目标对象中的字段是一个子对象时，可以将源对象的字段映射到目标对象子对象下的字段。
 只需自动配置field映射关系时，指定字段名时用“.”来指向子对象下的字段信息。
@@ -318,8 +318,6 @@ public class Contact {
     public void SimpleToComplex() {
         IMapper mapper = new AutoMapper();
         mapper.mapping(UserDto.class, UserDo.class)
-                .field("contact.address", "contactAddress")
-                .field("contact.tel", "contactTel")
                 .field("contactTel", "contact.tel")
                 .field("contactAddress", "contact.address");
 
