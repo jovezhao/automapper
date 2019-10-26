@@ -1,8 +1,11 @@
 package com.zhaofujun.automapper;
 
 public class UserDo {
+    enum  Sex{
+        female,male
+    }
     private String id;
-    private boolean sex;
+    private Sex sex;
     private int age;
     private String name;
     private Contact contact;
@@ -12,11 +15,11 @@ public class UserDo {
     }
 
 
-    public boolean isSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 

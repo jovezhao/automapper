@@ -5,10 +5,10 @@ import java.util.List;
 
 public class ConverterManager {
 
-    private static List<Converter> converters = new ArrayList<>();
+    private List<Converter> converters = new ArrayList<>();
 
 
-    public static ConverterInfo getConverter(Class sourceClass, Class targetClass) {
+    public ConverterInfo getConverter(Class sourceClass, Class targetClass) {
         Converter converter = converters.stream()
                 .filter(p -> (p.getSourceClass().equals(sourceClass) && p.getTargetClass().equals(targetClass))
                         ||
@@ -21,6 +21,10 @@ public class ConverterManager {
             return new ConverterInfo(converter, ConverterInfo.Direction.positive);
         else
             return new ConverterInfo(converter, ConverterInfo.Direction.negative);
+    }
+
+    public void addConverter(Converter converter) {
+        converters.add(converter);
     }
 }
 

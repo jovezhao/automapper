@@ -2,9 +2,9 @@ package com.zhaofujun.automapper;
 
 public class UserDto {
     private String id;
-    private boolean  sex;
+    private String  sex;
     private int age;
-    private String name;
+    private String realName;
     private String contactAddress;
     private String contactTel;
 
@@ -16,11 +16,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public boolean isSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -32,12 +32,12 @@ public class UserDto {
         this.age = age;
     }
 
-    public String getName() {
-        return name;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getContactAddress() {
