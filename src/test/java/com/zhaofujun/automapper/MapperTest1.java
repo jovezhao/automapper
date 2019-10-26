@@ -17,7 +17,7 @@ public class MapperTest1 {
         UserDo userDo = new UserDo();
         userDo.setAge(11);
         userDo.setContact(contact);
-        userDo.setId("121");
+//        userDo.setId("121");
         userDo.setName("name");
         userDo.setSex(true);
 

@@ -37,7 +37,7 @@ public class DefaultClassMappingBuilder implements ClassMappingBuilder {
     }
 
     @Override
-    public ClassMappingBuilder excludes(String[] targetFieldNames) {
+    public ClassMappingBuilder excludes(String... targetFieldNames) {
         for (String targetFieldName : targetFieldNames) {
             FieldMapping targetFieldMapping = classMapping.getFieldMapping(targetFieldName);
             targetFieldMapping.exclude();

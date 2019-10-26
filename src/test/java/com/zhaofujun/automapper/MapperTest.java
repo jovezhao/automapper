@@ -6,8 +6,9 @@ public class MapperTest {
         IMapper mapper = new AutoMapper();
 
 
-        mapper.mapping(UserDto.class, UserDo.class)
+        mapper.mapping(UserDto.class, UserDo.class,true)
                 .field("contactAddress", "contact.address")
+                .excludes("name")
                 .field("contactTel", "contact.tel");
 
         UserDto dto = new UserDto();

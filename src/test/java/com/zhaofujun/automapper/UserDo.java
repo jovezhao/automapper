@@ -11,9 +11,6 @@ public class UserDo {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public boolean isSex() {
         return sex;
