@@ -9,7 +9,7 @@
 IMapper mapper = new AutoMapper();
 UserDo userDo = mapper.map(dto, UserDo.class);
 ```
-> 直接使用automapper进行对象转换时，automapper将使用默认的转换规则进行转换，具体转换规则见 [默认转换规则](#32-默认转换规则)
+> 直接使用automapper进行对象转换时，automapper将使用默认的转换规则进行转换，具体转换规则见 [3.2 默认转换规则](#32-默认转换规则)
 
 
 ## 3. 转换演示
@@ -23,9 +23,78 @@ UserDo userDo = mapper.map(dto, UserDo.class);
 ```
 package com.zhaofujun.automapper;
 
-public class UserDo {
+public class UserDto {
     private String id;
-    private boolean sex;
+    private String  sex;
+    private int age;
+    private String realName;
+    private String contactAddress;
+    private String contactTel;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
+    }
+
+    public String getContactTel() {
+        return contactTel;
+    }
+
+    public void setContactTel(String contactTel) {
+        this.contactTel = contactTel;
+    }
+}
+
+
+```
+
+**UserDo**
+
+
+```
+package com.zhaofujun.automapper;
+
+public class UserDo {
+    enum  Sex{
+        female,male
+    }
+    private String id;
+    private Sex sex;
     private int age;
     private String name;
     private Contact contact;
@@ -35,11 +104,11 @@ public class UserDo {
     }
 
 
-    public boolean isSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -69,71 +138,31 @@ public class UserDo {
 }
 
 
-```
-
-**UserDo**
-
 
 ```
-package com.zhaofujun.automapper;
+**Contact**
 
-public class UserDto {
-    private String id;
-    private boolean  sex;
-    private int age;
-    private String name;
-    private String contactAddress;
-    private String contactTel;
+``` 
+public class Contact {
+    private String address;
+    private int tel;
 
-    public String getId() {
-        return id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public boolean isSex() {
-        return sex;
+    public int getTel() {
+        return tel;
     }
 
-    public void setSex(boolean sex) {
-        this.sex = sex;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContactAddress() {
-        return contactAddress;
-    }
-
-    public void setContactAddress(String contactAddress) {
-        this.contactAddress = contactAddress;
-    }
-
-    public String getContactTel() {
-        return contactTel;
-    }
-
-    public void setContactTel(String contactTel) {
-        this.contactTel = contactTel;
+    public void setTel(int tel) {
+        this.tel = tel;
     }
 }
-
 ```
 
 
@@ -245,9 +274,146 @@ public class UserDto {
     }
 ```
 
-### 3.6 映射复杂对象
-- 目标对象字段包括复杂对象时，复杂对象的创建方式使用默认构造函数
-- 源对象字段包括复杂对象时，要求源对象字段有getter方法
+### 3.6 映射复杂对象到简单对象
 
-### 允许添加自定义转换器，源字段与目标字段类型不致时可用
-转换器支持单向转换，也支持双向转换
+当源对象中的字段是一个子对象时，可以将子对象下的字段映射到目标对象的字段中。
+只需自动配置field映射关系时，指定字段名时用“.”来指向子对象下的字段信息。
+
+**演示代码**
+
+
+```
+    @Test
+    public void complexToSimple() {
+        IMapper mapper = new AutoMapper();
+        mapper.mapping(UserDo.class, UserDto.class)
+                .field("contact.address", "contactAddress")
+                .field("contact.tel", "contactTel");
+
+        Contact contact = new Contact();
+        contact.setAddress("address");
+        contact.setTel(11);
+
+        UserDo userDo = new UserDo();
+        userDo.setContact(contact);
+
+        UserDto userDto = mapper.map(userDo, UserDto.class);
+
+        Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
+
+
+    }
+```
+
+### 3.7 简单对象映射对复杂对象
+
+当目标对象中的字段是一个子对象时，可以将源对象的字段映射到目标对象子对象下的字段。
+只需自动配置field映射关系时，指定字段名时用“.”来指向子对象下的字段信息。
+
+**演示代码**
+
+
+```
+    @Test
+    public void SimpleToComplex() {
+        IMapper mapper = new AutoMapper();
+        mapper.mapping(UserDto.class, UserDo.class)
+                .field("contact.address", "contactAddress")
+                .field("contact.tel", "contactTel")
+                .field("contactTel", "contact.tel")
+                .field("contactAddress", "contact.address");
+
+
+        UserDto userDto = new UserDto();
+        userDto.setContactTel("123");
+        userDto.setContactAddress("address");
+
+        UserDo userDo = mapper.map(userDto, UserDo.class);
+
+        Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
+
+
+    }
+    
+```
+
+
+### 3.8 允许添加自定义转换器，用于解决任何类型之间的自定义转换
+
+当两个类型的转换比较通用，可以自定义转换器，
+
+**IMapper定义的配置方式**
+
+```
+    IMapper registerConverter(Converter converter);
+```
+
+**演示代码**
+
+``` 
+// 创建字符串与性别枚举的转换器
+class SexAndStringConverter extends Converter<String, UserDo.Sex> {
+
+    @Override
+    protected Class<String> getSourceClass() {
+        return String.class;
+    }
+
+    @Override
+    protected Class<UserDo.Sex> getTargetClass() {
+        return UserDo.Sex.class;
+    }
+
+    @Override
+    public UserDo.Sex toTarget(String source) {
+        if (source.equals("男"))
+            return UserDo.Sex.male;
+        else
+            return UserDo.Sex.female;
+    }
+
+    @Override
+    public String toSource(UserDo.Sex target) {
+        if (target.equals(UserDo.Sex.male))
+            return "男";
+        else
+            return "女";
+    }
+}
+
+```
+
+枚举转换成字符串
+
+```
+    @Test
+    public void EnumToString() {
+        IMapper mapper = new AutoMapper();
+        mapper.registerConverter(new SexAndStringConverter());
+        UserDo userDo = new UserDo();
+        userDo.setSex(UserDo.Sex.female);
+
+        UserDto userDto = mapper.map(userDo, UserDto.class);
+
+        Assert.assertEquals(userDto.getSex(), "女");
+
+    }
+```
+
+字符串转枚举
+
+
+```
+    @Test
+    public void StringToEnum() {
+        IMapper mapper = new AutoMapper();
+        mapper.registerConverter(new SexAndStringConverter());
+        UserDto userDto = new UserDto();
+        userDto.setSex("女");
+
+        UserDo userDo = mapper.map(userDto, UserDo.class);
+
+        Assert.assertEquals(userDo.getSex(), UserDo.Sex.female);
+
+    }
+```
