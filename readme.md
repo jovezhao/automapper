@@ -3,7 +3,7 @@
 
 ## 2. 快速应用AutoMapper
 
-```
+```java
 // 省略对象定义和赋值部分...
 
 IMapper mapper = new AutoMapper();
@@ -20,7 +20,7 @@ UserDo userDo = mapper.map(dto, UserDo.class);
 
 **UserDto**
 
-```
+```java
 package com.zhaofujun.automapper;
 
 public class UserDto {
@@ -86,7 +86,7 @@ public class UserDto {
 **UserDo**
 
 
-```
+```java
 package com.zhaofujun.automapper;
 
 public class UserDo {
@@ -142,7 +142,7 @@ public class UserDo {
 ```
 **Contact**
 
-``` 
+```java
 public class Contact {
     private String address;
     private int tel;
@@ -171,7 +171,7 @@ public class Contact {
 默认转换规则只转换目标对象中字段带有setter并且在源对象中有同名字段的所有字段信息。
 
 
-```
+```java
     @Test
     public  void defaultMapper() {
         UserDo userDo=new UserDo();
@@ -188,7 +188,7 @@ public class Contact {
 当目标对象中的字段名与源对象中的字段名相同，但目标对象没有setter方法时，可以在配置两个对象的映射关系时设置允许私有字段为true
 
 **IMapper接口定义的配置方式**
-```
+```java
     //自动匹配所有带setter，并且同名的字段
     ClassMappingBuilder mapping(Class sourceClass,Class targetClass);
     //自动匹配所有同名字段
@@ -196,7 +196,7 @@ public class Contact {
 ```
 
 **演示代码**
-```
+```java
    @Test
     public void noSetterMap(){
         UserDto userDto=new UserDto();
@@ -218,14 +218,14 @@ public class Contact {
 
 **ClassMappingBuilder定义的配置方式**
 
-```
+```java
     ClassMappingBuilder field( String sourceFieldName,String targetFieldName);
 
 ```
 **演示代码**
 
 
-```
+```java
     @Test
     public void differentFieldMap(){
         UserDto userDto=new UserDto();
@@ -249,14 +249,14 @@ public class Contact {
 
 **ClassMappingBuilder定义的配置方式**
 
-```
+```java
     ClassMappingBuilder excludes(String... targetFieldNames);
 
 ```
 
 **演示代码**
 
-```
+```java
     @Test
     public void excludeField(){
         UserDto userDto=new UserDto();
@@ -282,7 +282,7 @@ public class Contact {
 **演示代码**
 
 
-```
+```java
     @Test
     public void complexToSimple() {
         IMapper mapper = new AutoMapper();
@@ -313,7 +313,7 @@ public class Contact {
 **演示代码**
 
 
-```
+```java
     @Test
     public void SimpleToComplex() {
         IMapper mapper = new AutoMapper();
@@ -342,13 +342,13 @@ public class Contact {
 
 **IMapper定义的配置方式**
 
-```
+```java
     IMapper registerConverter(Converter converter);
 ```
 
 **演示代码**
 
-``` 
+```java
 // 创建字符串与性别枚举的转换器
 class SexAndStringConverter extends Converter<String, UserDo.Sex> {
 
@@ -383,7 +383,7 @@ class SexAndStringConverter extends Converter<String, UserDo.Sex> {
 
 枚举转换成字符串
 
-```
+```java
     @Test
     public void EnumToString() {
         IMapper mapper = new AutoMapper();
@@ -401,7 +401,7 @@ class SexAndStringConverter extends Converter<String, UserDo.Sex> {
 字符串转枚举
 
 
-```
+```java
     @Test
     public void StringToEnum() {
         IMapper mapper = new AutoMapper();
