@@ -18,7 +18,7 @@ public class ClassMappingManager {
      */
     public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass) {
         ClassMapping classMapping = classMappings.stream()
-                .filter(p -> p.getSourceClass() == sourceClass && p.getTargetClass() == targetClass)
+                .filter(p -> p.getSourceClass().isAssignableFrom(sourceClass) && p.getTargetClass().isAssignableFrom(targetClass))
                 .findFirst()
                 .orElse(null);
         if (classMapping == null) {

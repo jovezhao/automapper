@@ -44,5 +44,22 @@ public class ComplexMapperTest {
 
 
     }
+
+    @Test
+    public void subClassTest() {
+        IMapper mapper = new AutoMapper();
+        mapper.mapping(UserDto.class, UserDo.class)
+                .field("contactTel", "contact.tel")
+                .field("contactAddress", "contact.address");
+
+
+        UserDtoSubClass userDto = new UserDtoSubClass();
+        userDto.setContactTel("123");
+        userDto.setContactAddress("address");
+
+        UserDo userDo = mapper.map(userDto, UserDo.class);
+
+        Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
+    }
 }
 

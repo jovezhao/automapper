@@ -415,3 +415,44 @@ class SexAndStringConverter extends Converter<String, UserDo.Sex> {
 
     }
 ```
+
+### 3.9 支持对子类的映射
+
+配置的对象是父类，而实际转换是使用的子类时，automapper也自动支持
+
+**演示代码**
+
+UserDoSubClass
+```java
+package com.zhaofujun.automapper;
+
+public class UserDoSubClass extends UserDo {
+}
+
+```
+UserDtoSubClass
+```java
+package com.zhaofujun.automapper;
+
+public class UserDtoSubClass extends UserDto {
+}
+
+```
+```java
+    @Test
+    public void subClassTest() {
+        IMapper mapper = new AutoMapper();
+        mapper.mapping(UserDto.class, UserDo.class)
+                .field("contactTel", "contact.tel")
+                .field("contactAddress", "contact.address");
+
+
+        UserDtoSubClass userDto = new UserDtoSubClass();
+        userDto.setContactTel("123");
+        userDto.setContactAddress("address");
+
+        UserDo userDo = mapper.map(userDto, UserDo.class);
+
+        Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
+    }
+```
