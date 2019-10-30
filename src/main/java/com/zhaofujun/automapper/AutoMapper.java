@@ -75,7 +75,6 @@ public class AutoMapper implements IMapper {
         }
 
 
-
         // 如果目标类型是源类型的包装器,通过包装器类型的valueOf静态方法创建对象
         if (targetClass.equals(TypeManager.getWrapperClass(valueClass)))
             return targetClass.getDeclaredMethod("valueOf", valueClass).invoke(null, value);
@@ -87,7 +86,7 @@ public class AutoMapper implements IMapper {
 
         // 如果目标是字符串，直接使用toString返回
         if (targetClass.equals(String.class))
-            return value.toString();
+            return value == null ? null : value.toString();
 
         //如果目标类型是包装器，将值转换为字符串后用包装器valueOf的字符串方式创建对象
         if (TypeManager.isWrapper(targetClass))
