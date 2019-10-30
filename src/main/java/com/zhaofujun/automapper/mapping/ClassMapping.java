@@ -61,7 +61,7 @@ public class ClassMapping {
 
         if (!allowNoSetter) {
             fieldMappingStream = fieldMappingStream
-                    .filter(p -> p.getTargetField().getSetterMethod() != null && p.getTargetField().getSetterMethod() != null);
+                    .filter(p -> p.getTargetField().getSetterMethod() != null && p.getSourceField().getGetterMethod() != null);
         }
         return fieldMappingStream.collect(Collectors.toList());
 
