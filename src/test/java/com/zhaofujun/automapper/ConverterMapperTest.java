@@ -38,12 +38,12 @@ public class ConverterMapperTest {
 class SexAndStringConverter extends Converter<String, UserDo.Sex> {
 
     @Override
-    protected Class<String> getSourceClass() {
+    public Class<String> getSourceClass() {
         return String.class;
     }
 
     @Override
-    protected Class<UserDo.Sex> getTargetClass() {
+    public Class<UserDo.Sex> getTargetClass() {
         return UserDo.Sex.class;
     }
 

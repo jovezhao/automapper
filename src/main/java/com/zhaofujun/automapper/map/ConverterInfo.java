@@ -2,7 +2,16 @@ package com.zhaofujun.automapper.map;
 
 public class ConverterInfo {
 
-   public enum Direction {positive,     negative}
+    public enum Direction {
+        /**
+         * 正向
+         */
+        positive,
+        /**
+         * 反向
+         */
+        negative
+    }
 
     private Converter converter;
     private Direction direction;
@@ -18,5 +27,11 @@ public class ConverterInfo {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    public Object convert(Object source) {
+        if (direction == Direction.negative)
+            return this.converter.toSource(source);
+        return this.converter.toTarget(source);
     }
 }

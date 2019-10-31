@@ -1,5 +1,6 @@
 package com.zhaofujun.automapper.builder;
 
+import com.zhaofujun.automapper.map.Converter;
 import com.zhaofujun.automapper.mapping.ClassMapping;
 import com.zhaofujun.automapper.mapping.FieldInfo;
 import com.zhaofujun.automapper.mapping.FieldMapping;
@@ -20,6 +21,11 @@ public class DefaultClassMappingBuilder implements ClassMappingBuilder {
 
     @Override
     public ClassMappingBuilder field(String sourceFieldName, String targetFieldName) {
+        return field(sourceFieldName, targetFieldName, null);
+    }
+
+    @Override
+    public ClassMappingBuilder field(String sourceFieldName, String targetFieldName, Converter converter) {
 
         try {
             FieldMapping targetFieldMapping = classMapping.getFieldMapping(targetFieldName);
@@ -29,7 +35,7 @@ public class DefaultClassMappingBuilder implements ClassMappingBuilder {
             }
 
             FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName);
-            targetFieldMapping.map(sourceField);
+            targetFieldMapping.map(sourceField, converter);
         } catch (NotFoundFieldException ex) {
             logger.info("没有找到字段", ex);
         }

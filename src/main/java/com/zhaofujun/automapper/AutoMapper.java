@@ -23,7 +23,11 @@ public class AutoMapper implements IMapper {
             try { //
                 Object value = p.getSourceField().getValue(source);
 
-                Object newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType());
+                Object newValue;
+                if (p.getConverterInfo() != null)
+                    newValue = p.getConverterInfo().convert(value);
+                else
+                    newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType());
                 p.getTargetField().setValue(target, newValue);
 
             } catch (Exception ex) {
@@ -68,11 +72,8 @@ public class AutoMapper implements IMapper {
 
         // 查看自定义转换器是否有匹配，如果有使用转换器转换
         ConverterInfo converterInfo = converterManager.getConverter(valueClass, targetClass);
-        if (converterInfo != null) {
-            if (converterInfo.getDirection() == ConverterInfo.Direction.negative)
-                return converterInfo.getConverter().toSource(value);
-            return converterInfo.getConverter().toTarget(value);
-        }
+        if (converterInfo != null)
+            return converterInfo.convert(value);
 
 
         // 如果目标类型是源类型的包装器,通过包装器类型的valueOf静态方法创建对象

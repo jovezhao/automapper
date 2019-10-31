@@ -1,5 +1,7 @@
 package com.zhaofujun.automapper.mapping;
 
+import com.zhaofujun.automapper.map.Converter;
+import com.zhaofujun.automapper.map.ConverterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ public class FieldMapping {
     private FieldInfo sourceField; //源字段
     private FieldInfo targetField; //目标字段
     private MappingState mappingState = MappingState.YES; //映射状态
+    private ConverterInfo converterInfo;
 
     //同名字段的构建,如果没有setter，默认不映射
     public FieldMapping(FieldInfo targetField, Class sourceClass) {
@@ -35,10 +38,18 @@ public class FieldMapping {
 
 
     //指定映射字段
-    public void map(FieldInfo sourceField) {
+    public void map(FieldInfo sourceField, Converter converter) {
         this.sourceField = sourceField;
         this.mappingState = MappingState.YES;
 
+        if (converter == null)
+            return;
+        if (converter.getTargetClass().isAssignableFrom(targetField.getField().getType()) && converter.getSourceClass().isAssignableFrom(sourceField.getField().getType())) {
+            converterInfo = new ConverterInfo(converter, ConverterInfo.Direction.positive);
+        }
+        if (converter.getTargetClass().isAssignableFrom(sourceField.getField().getType()) && converter.getSourceClass().isAssignableFrom(targetField.getField().getType())) {
+            converterInfo = new ConverterInfo(converter, ConverterInfo.Direction.negative);
+        }
     }
 
     public FieldInfo getSourceField() {
@@ -53,5 +64,7 @@ public class FieldMapping {
         return mappingState;
     }
 
-
+    public ConverterInfo getConverterInfo() {
+        return converterInfo;
+    }
 }
