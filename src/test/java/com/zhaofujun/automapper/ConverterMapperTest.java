@@ -1,5 +1,7 @@
 package com.zhaofujun.automapper;
 
+import com.zhaofujun.automapper.beans.UserDo;
+import com.zhaofujun.automapper.beans.UserDto;
 import com.zhaofujun.automapper.map.Converter;
 import org.junit.Assert;
 import org.junit.Test;
