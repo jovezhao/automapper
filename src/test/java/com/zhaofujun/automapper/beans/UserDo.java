@@ -1,11 +1,9 @@
 package com.zhaofujun.automapper.beans;
 
-public class UserDo {
+public class UserDo extends SupperUserDo {
     public enum Sex {
         female, male
     }
-
-    private String id;
     private Sex sex;
     private int age;
     private String name;
@@ -31,9 +29,7 @@ public class UserDo {
     private String name19;
 
 
-    public String getId() {
-        return id;
-    }
+
 
 
     public Sex getSex() {
@@ -68,9 +64,6 @@ public class UserDo {
         this.contact = contact;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName1() {
         return name1;

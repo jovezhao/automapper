@@ -2,26 +2,39 @@ package com.zhaofujun.automapper.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BeanUtils {
 
-    //获取bean中所有字段
+    //获取bean中所有字段 包括父级
     public static Field[] getAllFields(Class clazz) {
-        return clazz.getFields();
+        List<Field> fieldList = new ArrayList<>();
+        Field[] selfFields = clazz.getDeclaredFields();
+
+        fieldList.addAll(Arrays.asList(selfFields));
+        if (clazz.getSuperclass() != null) {
+            Field[] superFields = getAllFields(clazz.getSuperclass());
+            fieldList.addAll(Arrays.asList(superFields));
+        }
+
+        return fieldList.toArray(new Field[fieldList.size()]);
     }
 
     public static Field getField(Class clazz, String fieldName) {
         try {
-            return clazz.getField(fieldName);
+            return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
-            return null;
+            if (clazz.getSuperclass() == null) return null;
+            return getField(clazz.getSuperclass(), fieldName);
         }
     }
 
     //获取bean中字段的setter方法
     public static Method getSetter(Field field) {
 
-        if(field==null) return null;
+        if (field == null) return null;
 
         try {
             Class fieldType = field.getType();// 返回参数类型
@@ -37,7 +50,7 @@ public class BeanUtils {
 
     //获取bean中字段的getter方法
     public static Method getGetter(Field field) {
-        if(field==null) return null;
+        if (field == null) return null;
         try {
             Class fieldType = field.getType();// 返回参数类型
             StringBuilder sb = new StringBuilder();
@@ -54,7 +67,6 @@ public class BeanUtils {
             return null;
         }
     }
-
 
 
 }
