@@ -7,12 +7,12 @@ public class BeanUtils {
 
     //获取bean中所有字段
     public static Field[] getAllFields(Class clazz) {
-        return clazz.getDeclaredFields();
+        return clazz.getFields();
     }
 
     public static Field getField(Class clazz, String fieldName) {
         try {
-            return clazz.getDeclaredField(fieldName);
+            return clazz.getField(fieldName);
         } catch (NoSuchFieldException e) {
             return null;
         }
