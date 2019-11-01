@@ -1,4 +1,4 @@
-package com.zhaofujun.automapper.reflect;
+package com.zhaofujun.automapper.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

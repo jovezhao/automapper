@@ -2,22 +2,26 @@ package com.zhaofujun.automapper;
 
 import com.zhaofujun.automapper.builder.ClassMappingBuilder;
 import com.zhaofujun.automapper.builder.DefaultClassMappingBuilder;
-import com.zhaofujun.automapper.map.Converter;
-import com.zhaofujun.automapper.map.ConverterInfo;
-import com.zhaofujun.automapper.map.ConverterManager;
-import com.zhaofujun.automapper.map.TypeManager;
+import com.zhaofujun.automapper.converter.Converter;
+import com.zhaofujun.automapper.converter.ConverterInfo;
+import com.zhaofujun.automapper.converter.ConverterManager;
 import com.zhaofujun.automapper.mapping.ClassMappingManager;
 import com.zhaofujun.automapper.mapping.FieldMapping;
+import com.zhaofujun.automapper.utils.TypeUtiles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class AutoMapper implements IMapper {
+    private Logger logger = LoggerFactory.getLogger(AutoMapper.class);
 
     private ClassMappingManager classMappingManager = new ClassMappingManager();
     private ConverterManager converterManager = new ConverterManager();
 
     @Override
     public void map(Object source, Object target) {
+
         List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass());
         fieldMappingList.forEach(p -> {
             try { //
@@ -31,7 +35,7 @@ public class AutoMapper implements IMapper {
                 p.getTargetField().setValue(target, newValue);
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.info("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
             }
         });
 
@@ -77,11 +81,11 @@ public class AutoMapper implements IMapper {
 
 
         // 如果目标类型是源类型的包装器,通过包装器类型的valueOf静态方法创建对象
-        if (targetClass.equals(TypeManager.getWrapperClass(valueClass)))
+        if (targetClass.equals(TypeUtiles.getWrapperClass(valueClass)))
             return targetClass.getDeclaredMethod("valueOf", valueClass).invoke(null, value);
 
         // 如果源类类型是包装器，目标类型是基础类型，可以直接返回
-        if (valueClass.equals(TypeManager.getWrapperClass(targetClass)))
+        if (valueClass.equals(TypeUtiles.getWrapperClass(targetClass)))
             return value;
 
 
@@ -90,12 +94,12 @@ public class AutoMapper implements IMapper {
             return value == null ? null : value.toString();
 
         //如果目标类型是包装器，将值转换为字符串后用包装器valueOf的字符串方式创建对象
-        if (TypeManager.isWrapper(targetClass))
+        if (TypeUtiles.isWrapper(targetClass))
             return targetClass.getDeclaredMethod("valueOf", String.class).invoke(null, value.toString());
 
         //如果目标是基础类型，将值转换为字符串后用包装器的value方法转换成基础类型
-        if (TypeManager.isBase(targetClass)) {
-            Class wrapperClass = TypeManager.getWrapperClass(targetClass);
+        if (TypeUtiles.isBase(targetClass)) {
+            Class wrapperClass = TypeUtiles.getWrapperClass(targetClass);
             Object wrapperObject = wrapperClass.getDeclaredMethod("valueOf", String.class).invoke(null, value.toString());
             return wrapperClass.getDeclaredMethod(targetClass.getName() + "Value").invoke(wrapperObject);
         }

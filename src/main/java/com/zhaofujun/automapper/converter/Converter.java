@@ -1,4 +1,4 @@
-package com.zhaofujun.automapper.map;
+package com.zhaofujun.automapper.converter;
 
 public abstract class Converter<U, T> {
 

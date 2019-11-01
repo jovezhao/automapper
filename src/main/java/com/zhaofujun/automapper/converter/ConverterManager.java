@@ -1,4 +1,4 @@
-package com.zhaofujun.automapper.map;
+package com.zhaofujun.automapper.converter;
 
 import java.util.ArrayList;
 import java.util.List;

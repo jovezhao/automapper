@@ -1,7 +1,7 @@
 package com.zhaofujun.automapper.mapping;
 
-import com.zhaofujun.automapper.map.Converter;
-import com.zhaofujun.automapper.map.ConverterInfo;
+import com.zhaofujun.automapper.converter.Converter;
+import com.zhaofujun.automapper.converter.ConverterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class FieldMapping {
         try {
             this.sourceField = FieldInfo.create(sourceClass, targetField.getField().getName());
         } catch (NotFoundFieldException ex) {
-            logger.info("没有找到同名字段");
+            logger.info("在源类型{}中没有找到同名字段{}", sourceClass.getName(), targetField.getField().getName());
         }
     }
 

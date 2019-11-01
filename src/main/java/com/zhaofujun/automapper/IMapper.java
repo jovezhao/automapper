@@ -2,7 +2,7 @@ package com.zhaofujun.automapper;
 
 
 import com.zhaofujun.automapper.builder.ClassMappingBuilder;
-import com.zhaofujun.automapper.map.Converter;
+import com.zhaofujun.automapper.converter.Converter;
 
 public interface IMapper {
     void map(Object source, Object target);

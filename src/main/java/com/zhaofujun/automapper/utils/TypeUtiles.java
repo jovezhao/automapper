@@ -1,9 +1,11 @@
-package com.zhaofujun.automapper.map;
+package com.zhaofujun.automapper.utils;
+
+import com.zhaofujun.automapper.converter.BaseAndWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TypeManager {
+public class TypeUtiles {
     private static List<BaseAndWrapper> baseAndWrappers = new ArrayList<>();
 
     static {

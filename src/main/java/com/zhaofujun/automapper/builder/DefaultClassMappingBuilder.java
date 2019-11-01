@@ -1,6 +1,6 @@
 package com.zhaofujun.automapper.builder;
 
-import com.zhaofujun.automapper.map.Converter;
+import com.zhaofujun.automapper.converter.Converter;
 import com.zhaofujun.automapper.mapping.ClassMapping;
 import com.zhaofujun.automapper.mapping.FieldInfo;
 import com.zhaofujun.automapper.mapping.FieldMapping;
@@ -37,7 +37,7 @@ public class DefaultClassMappingBuilder implements ClassMappingBuilder {
             FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName);
             targetFieldMapping.map(sourceField, converter);
         } catch (NotFoundFieldException ex) {
-            logger.info("没有找到字段", ex);
+            logger.info(ex.getMessage());
         }
         return this;
     }

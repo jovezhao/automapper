@@ -1,6 +1,6 @@
 package com.zhaofujun.automapper.mapping;
 
-import com.zhaofujun.automapper.reflect.BeanUtils;
+import com.zhaofujun.automapper.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class ClassMapping {
                 FieldInfo targetField = FieldInfo.create(targetClass, field.getName());
                 fieldMappingItemMap.put(field.getName(), new FieldMapping(targetField, sourceClass));
             } catch (NotFoundFieldException ex) {
-                logger.info("没有找到字段", ex);
+                logger.info(ex.getMessage());
             }
         }
     }
