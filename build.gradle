@@ -3,7 +3,8 @@ plugins {
 }
 
 group 'com.zhaofujun.automapper'
-version '1.0-SNAPSHOT'
+//version '1.0-SNAPSHOT'
+version '1.0.release'
 
 sourceCompatibility = 1.8
 
@@ -15,4 +16,81 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.25'
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'org.slf4j:slf4j-log4j12:1.7.25'
+}
+
+
+// ... 在最下面新增以下代码
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version "${version}"
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
+            pom {
+                name = "AutoMapper"
+                description = "easy to mapping jave entity"
+                url = "https://github.com/jovezhao/automapper"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "jovezhao"
+                        name = "zhaofujun"
+                        email = "jovezhao@foxmail.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/jovezhao/automapper"
+                    developerConnection = "scm:git:https://github.com/jovezhao/automapper"
+                    url = "https://github.com/jovezhao/automapper"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            // 如果version以SNAPSHOT结尾就会上传到快照仓库，如果不是就上传到release仓库
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "${NEXUS_USERNAME}"
+                password = "${NEXUS_PASSWORD}"
+            }
+        }
+
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

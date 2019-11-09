@@ -7,6 +7,7 @@ import com.zhaofujun.automapper.converter.ConverterInfo;
 import com.zhaofujun.automapper.converter.ConverterManager;
 import com.zhaofujun.automapper.mapping.ClassMappingManager;
 import com.zhaofujun.automapper.mapping.FieldMapping;
+import com.zhaofujun.automapper.mapping.ParseValueException;
 import com.zhaofujun.automapper.utils.TypeUtiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,11 @@ public class AutoMapper implements IMapper {
                     newValue = p.getConverterInfo().convert(value);
                 else
                     newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType());
+
                 p.getTargetField().setValue(target, newValue);
 
+            } catch (ParseValueException ex) {
+                logger.info("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
             } catch (Exception ex) {
                 logger.info("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
             }
@@ -70,6 +74,7 @@ public class AutoMapper implements IMapper {
     }
 
     private Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
+        if (value == null) return null;
         // 先判断两个类型是否一致，如果一致，直接使用
         if (valueClass.equals(targetClass))
             return value;
@@ -105,7 +110,10 @@ public class AutoMapper implements IMapper {
         }
 
         //其于的都使用对象转换工具直接转换
-        return map(value, targetClass);
+        Object object = map(value, targetClass);
+        if (value != null && object == null)
+            throw new ParseValueException("源类型：" + valueClass.getName() + "转换到目标类型：" + targetClass.getName() + "失败");
+        return value;
 
     }
 
