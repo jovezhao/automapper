@@ -11,24 +11,40 @@ public class BeanUtils {
     //获取bean中所有字段 包括父级
     public static Field[] getAllFields(Class clazz) {
         List<Field> fieldList = new ArrayList<>();
-        Field[] selfFields = clazz.getDeclaredFields();
 
-        fieldList.addAll(Arrays.asList(selfFields));
-        if (clazz.getSuperclass() != null) {
-            Field[] superFields = getAllFields(clazz.getSuperclass());
-            fieldList.addAll(Arrays.asList(superFields));
+        fieldList.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        Class thisClass = clazz;
+        while (thisClass.getSuperclass() != null) {
+            fieldList.addAll(Arrays.asList(thisClass.getSuperclass().getDeclaredFields()));
+            thisClass = thisClass.getSuperclass();
         }
+//        if (clazz.getSuperclass() != null) {
+//            Field[] superFields = getAllFields(clazz.getSuperclass());
+//            fieldList.addAll(Arrays.asList(superFields));
+//        }
 
         return fieldList.toArray(new Field[fieldList.size()]);
     }
 
     public static Field getField(Class clazz, String fieldName) {
-        try {
-            return clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            if (clazz.getSuperclass() == null) return null;
-            return getField(clazz.getSuperclass(), fieldName);
+
+        Class thisClass = clazz;
+        while (thisClass.getSuperclass() != null) {
+            try {
+                return thisClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                thisClass = thisClass.getSuperclass();
+            }
         }
+        return null;
+//
+//        try {
+//            return clazz.getDeclaredField(fieldName);
+//        } catch (NoSuchFieldException e) {
+//            if (clazz.getSuperclass() == null) return null;
+//            return getField(clazz.getSuperclass(), fieldName);
+//        }
     }
 
     //获取bean中字段的setter方法

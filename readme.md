@@ -3,6 +3,14 @@
 
 ## 2. 快速应用AutoMapper
 
+使用maven添加引用
+```xml
+<dependency>
+  <groupId>com.zhaofujun.automapper</groupId>
+  <artifactId>automapper</artifactId>
+  <version>1.0.release</version>
+</dependency>
+```
 ```java
 // 省略对象定义和赋值部分...
 

@@ -53,6 +53,7 @@ public class PerformanceTest {
         userDo.setName18("功盖三分国，名成八阵图。江流石不转，遗恨失吞吴。19");
         userDo.setName19("功盖三分国，名成八阵图。江流石不转，遗恨失吞吴。20");
 
+        System.out.println("I love you more than I can say");
         preheat();
     }
 
