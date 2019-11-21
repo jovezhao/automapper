@@ -13,9 +13,7 @@ public class ClassMappingManager {
         this.classMappings.add(classMapping);
     }
 
-    /**
-     * 按源类型和目标类型获取字段列表，如果没有获取到则按
-     */
+    //按源类型和目标类型获取字段列表，如果没有获取到则按
     public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass) {
         ClassMapping classMapping = classMappings.stream()
                 .filter(p -> p.getSourceClass().isAssignableFrom(sourceClass) && p.getTargetClass().isAssignableFrom(targetClass))
