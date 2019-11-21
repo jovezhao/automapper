@@ -1,5 +1,8 @@
 package com.zhaofujun.automapper.beans;
 
+import java.time.LocalTime;
+import java.util.Date;
+
 public class UserDo extends SupperUserDo {
     public enum Sex {
         female, male
@@ -8,6 +11,9 @@ public class UserDo extends SupperUserDo {
     private int age;
     private String name;
     private Contact contact;
+    private Date date;
+    private LocalTime localTime;
+
     private String name1;
     private String name2;
     private String name3;

@@ -16,6 +16,7 @@ public class SimpleMapperTest {
         IMapper mapper=new AutoMapper();
         UserDto userDto = mapper.map(userDo, UserDto.class);
         Assert.assertEquals(userDo.getAge(),userDto.getAge());
+
     }
 
     @Test
@@ -28,6 +29,11 @@ public class SimpleMapperTest {
         mapper.mapping(UserDto.class,UserDo.class,true);
         UserDo userDo = mapper.map(userDto, UserDo.class);
         Assert.assertEquals(userDo.getId(),userDto.getId());
+
+        UserDto userDto1 = mapper.map(userDo, UserDto.class);
+        Assert.assertEquals(userDo.getId(),userDto1.getId());
+
+
     }
 
     @Test

@@ -94,7 +94,11 @@ public class AutoMapper implements IMapper {
             return value == null ? null : value.toString();
 
         //如果目标类型是包装器，将值转换为字符串后用包装器valueOf的字符串方式创建对象
-        if (TypeUtiles.isWrapper(targetClass))
+        if (targetClass.isEnum() && value != null)
+            return targetClass.getDeclaredMethod("valueOf", String.class).invoke(null, value.toString());
+
+        //如果目标类型是包装器，将值转换为字符串后用包装器valueOf的字符串方式创建对象
+        if (TypeUtiles.isWrapper(targetClass) && value != null)
             return targetClass.getDeclaredMethod("valueOf", String.class).invoke(null, value.toString());
 
         //如果目标是基础类型，将值转换为字符串后用包装器的value方法转换成基础类型
