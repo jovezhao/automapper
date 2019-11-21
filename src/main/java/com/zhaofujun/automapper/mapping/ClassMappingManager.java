@@ -9,12 +9,15 @@ import java.util.List;
 public class ClassMappingManager {
     List<ClassMapping> classMappings = new ArrayList<>();
 
-    public void addClassMapping(ClassMapping classMapping) {
+    public void registerClassMapping(ClassMapping classMapping) {
         this.classMappings.add(classMapping);
     }
 
     //按源类型和目标类型获取字段列表，如果没有获取到则按
     public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass) {
+
+
+
         ClassMapping classMapping = classMappings.stream()
                 .filter(p -> p.getSourceClass().isAssignableFrom(sourceClass) && p.getTargetClass().isAssignableFrom(targetClass))
                 .findFirst()

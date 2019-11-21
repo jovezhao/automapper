@@ -1,7 +1,6 @@
 package com.zhaofujun.automapper;
 
 import com.zhaofujun.automapper.builder.ClassMappingBuilder;
-import com.zhaofujun.automapper.builder.DefaultClassMappingBuilder;
 import com.zhaofujun.automapper.converter.Converter;
 import com.zhaofujun.automapper.converter.ConverterInfo;
 import com.zhaofujun.automapper.converter.ConverterManager;
@@ -66,12 +65,14 @@ public class AutoMapper implements IMapper {
     @Override
     public ClassMappingBuilder mapping(Class sourceClass, Class targetClass, boolean allowPrivate) {
 
-        ClassMappingBuilder classBuilder = new DefaultClassMappingBuilder(sourceClass, targetClass, allowPrivate);
+        ClassMappingBuilder classBuilder = new ClassMappingBuilder(sourceClass, targetClass, allowPrivate);
 
-        classMappingManager.addClassMapping(classBuilder.getClassMapping());
+        classMappingManager.registerClassMapping(classBuilder.builder());
 
         return classBuilder;
     }
+
+
 
     private Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
         if (value == null) return null;
@@ -124,6 +125,14 @@ public class AutoMapper implements IMapper {
     public IMapper registerConverter(Converter converter) {
         converterManager.addConverter(converter);
         return this;
+    }
+
+    public ClassMappingManager getClassMappingManager() {
+        return classMappingManager;
+    }
+
+    public ConverterManager getConverterManager() {
+        return converterManager;
     }
 }
 
