@@ -2,6 +2,7 @@ package com.zhaofujun.automapper.utils;
 
 import com.zhaofujun.automapper.converter.BaseAndWrapper;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class TypeUtiles {
         return baseAndWrappers.stream()
                 .filter(p -> p.getWrapperClass().equals(clazz))
                 .count() > 0;
+
     }
 
     public static boolean isBase(Class clazz) {

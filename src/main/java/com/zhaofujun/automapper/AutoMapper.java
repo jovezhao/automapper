@@ -11,6 +11,8 @@ import com.zhaofujun.automapper.utils.TypeUtiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 public class AutoMapper implements IMapper {
@@ -73,7 +75,6 @@ public class AutoMapper implements IMapper {
     }
 
 
-
     private Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
         if (value == null) return null;
         // 先判断两个类型是否一致，如果一致，直接使用
@@ -106,6 +107,13 @@ public class AutoMapper implements IMapper {
         //如果目标类型是包装器，将值转换为字符串后用包装器valueOf的字符串方式创建对象
         if (TypeUtiles.isWrapper(targetClass) && value != null)
             return targetClass.getDeclaredMethod("valueOf", String.class).invoke(null, value.toString());
+
+        //如果目标类型是BigInteger或BigDecimal，将值转换为字符串后使用构造函数创建
+        if (targetClass.equals(BigDecimal.class))
+            return value == null ? null : new BigDecimal(value.toString());
+        if (targetClass.equals(BigInteger.class))
+            return value == null ? null : new BigInteger(value.toString());
+
 
         //如果目标是基础类型，将值转换为字符串后用包装器的value方法转换成基础类型
         if (TypeUtiles.isBase(targetClass)) {
