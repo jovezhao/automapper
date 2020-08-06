@@ -1,5 +1,6 @@
 package com.zhaofujun.automapper.mapping;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.zhaofujun.automapper.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ public class FieldInfo {
 
     private Logger logger = LoggerFactory.getLogger(FieldInfo.class);
 
-    public static FieldInfo create(Class clazz, String mappingField) throws NotFoundFieldException {
+    public static FieldInfo create(Class clazz, String mappingField, MethodAccess methodAccess) throws NotFoundFieldException {
 
         String fieldName;
         int i = mappingField.indexOf(".");
@@ -25,14 +26,15 @@ public class FieldInfo {
         if (field == null)
             throw new NotFoundFieldException("在类型" + clazz.getName() + "下没有找到字段为" + fieldName + "的字段");
 
-        FieldInfo fieldInfo = new FieldInfo();
-        fieldInfo.field = field;
-        fieldInfo.mappingField = mappingField;
-        fieldInfo.getterMethod = BeanUtils.getGetter(field);
-        fieldInfo.setterMethod = BeanUtils.getSetter(field);
+        FieldInfo fieldInfo = new FieldInfo(mappingField, field, BeanUtils.getGetter(field), BeanUtils.getSetter(field), methodAccess, null);
+//        fieldInfo.field = field;
+//        fieldInfo.mappingField = mappingField;
+//        fieldInfo.getterMethod = BeanUtils.getGetter(field);
+//        fieldInfo.setterMethod = BeanUtils.getSetter(field);
+//        fieldInfo.methodAccess = methodAccess;
 
         if (i != -1) {
-            fieldInfo.next = create(field.getType(), mappingField.substring(i + 1, mappingField.length()));
+            fieldInfo.next = create(field.getType(), mappingField.substring(i + 1, mappingField.length()), MethodAccess.get(field.getType()));
         }
         return fieldInfo;
     }
@@ -42,14 +44,25 @@ public class FieldInfo {
         return next.getNextType();
     }
 
-    private FieldInfo() {
-
+    private FieldInfo(String mappingField, Field field, Method getterMethod, Method setterMethod, MethodAccess methodAccess, FieldInfo next) {
+        this.mappingField = mappingField;
+        this.field = field;
+        this.getterMethod = getterMethod;
+        this.setterMethod = setterMethod;
+        this.methodAccess = methodAccess;
+        this.getterMethodIndex = getterMethod == null ? -1 : methodAccess.getIndex(getterMethod.getName());
+        this.setterMethodIndex = setterMethod == null ? -1 : methodAccess.getIndex(setterMethod.getName());
+        this.next = next;
     }
 
     private String mappingField;
     private Field field;
     private Method getterMethod;
     private Method setterMethod;
+    private MethodAccess methodAccess;
+    private int getterMethodIndex;
+    private int setterMethodIndex;
+
 
     public Field getField() {
         return field;
@@ -101,20 +114,22 @@ public class FieldInfo {
     private void setFieldValue(Object object, Object value) {
         try {
             if (this.getSetterMethod() != null) {
-                this.getSetterMethod().invoke(object, value);
+//                this.getSetterMethod().invoke(object, value);
+                methodAccess.invoke(object, setterMethodIndex, value);
             } else {
                 this.getField().setAccessible(true);
                 this.getField().set(object, value);
             }
         } catch (Exception ex) {
-            logger.info("为{}赋值时发生异常，原因",field.getName(),ex.getMessage());
+            logger.info("为{}赋值时发生异常，原因", field.getName(), ex.getMessage());
         }
     }
 
     private Object getFieldValue(Object object) {
         try {
             if (this.getGetterMethod() != null) {
-                return this.getGetterMethod().invoke(object);
+//                return this.getGetterMethod().invoke(object);
+                return methodAccess.invoke(object, getterMethodIndex);
             } else {
                 this.getField().setAccessible(true);
                 return this.getField().get(object);

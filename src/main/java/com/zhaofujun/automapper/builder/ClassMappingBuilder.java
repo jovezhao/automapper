@@ -34,7 +34,7 @@ public class ClassMappingBuilder   {
                 targetFieldMapping = classMapping.createFieldMapping(targetFieldName);
             }
 
-            FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName);
+            FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName,classMapping.getSourceMethodAccess());
             targetFieldMapping.map(sourceField, converter);
         } catch (NotFoundFieldException ex) {
             logger.info(ex.getMessage());

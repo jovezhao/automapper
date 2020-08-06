@@ -1,5 +1,6 @@
 package com.zhaofujun.automapper.mapping;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.zhaofujun.automapper.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +14,13 @@ import java.util.stream.Stream;
 public class ClassMapping {
 
     private Logger logger = LoggerFactory.getLogger(ClassMapping.class);
-
     private Class sourceClass;
     private Class targetClass;
     private boolean allowNoSetter;
     private Map<String, FieldMapping> fieldMappingItemMap;
+    private MethodAccess sourceMethodAccess;
+    private MethodAccess targetMethodAccess;
+
 
     public ClassMapping(Class sourceClass, Class targetClass) {
         this(sourceClass, targetClass, false);
@@ -28,11 +31,13 @@ public class ClassMapping {
         this.targetClass = targetClass;
         this.allowNoSetter = allowNoSetter;
         fieldMappingItemMap = new HashMap<>();
+        this.targetMethodAccess = MethodAccess.get(targetClass);
+        this.sourceMethodAccess = MethodAccess.get(sourceClass);
 
         for (Field field : BeanUtils.getAllFields(targetClass)) {
             try {
-                FieldInfo targetField = FieldInfo.create(targetClass, field.getName());
-                fieldMappingItemMap.put(field.getName(), new FieldMapping(targetField, sourceClass));
+                FieldInfo targetField = FieldInfo.create(targetClass, field.getName(), targetMethodAccess);
+                fieldMappingItemMap.put(field.getName(), new FieldMapping(targetField, sourceClass, sourceMethodAccess));
             } catch (NotFoundFieldException ex) {
                 logger.info(ex.getMessage());
             }
@@ -72,10 +77,18 @@ public class ClassMapping {
     }
 
     public FieldMapping createFieldMapping(String targetFieldName) throws NotFoundFieldException {
-        FieldInfo targetField = FieldInfo.create(targetClass, targetFieldName);
-        FieldMapping fieldMapping = new FieldMapping(targetField, sourceClass);
+        FieldInfo targetField = FieldInfo.create(targetClass, targetFieldName, targetMethodAccess);
+        FieldMapping fieldMapping = new FieldMapping(targetField, sourceClass, sourceMethodAccess);
         fieldMappingItemMap.put(targetFieldName, fieldMapping);
         return fieldMapping;
+    }
+
+    public MethodAccess getSourceMethodAccess() {
+        return sourceMethodAccess;
+    }
+
+    public MethodAccess getTargetMethodAccess() {
+        return targetMethodAccess;
     }
 }
 

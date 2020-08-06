@@ -6,6 +6,11 @@ import com.zhaofujun.automapper.beans.UserDto;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class SimpleMapperTest {
 
     @Test
@@ -63,5 +68,24 @@ public class SimpleMapperTest {
 
         UserDo userDo = mapper.map(userDto, UserDo.class);
         Assert.assertEquals(userDo.getAge(),0);
+    }
+
+
+    @Test
+    public void testHashmap(){
+        List<UserDto> us=new ArrayList<>();
+        UserDto e1 = new UserDto();
+        e1.setId("11");
+        e1.setName1("name1");
+        us.add(e1);
+
+
+        UserDto e2 = new UserDto();
+        e2.setId("22");
+        e2.setName1("name2");
+        us.add(e2);
+
+        Map<String, String> collect = us.stream().collect(Collectors.toMap(UserDto::getId, UserDto::getName1));
+
     }
 }

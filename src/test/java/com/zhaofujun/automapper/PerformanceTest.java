@@ -53,7 +53,6 @@ public class PerformanceTest {
         userDo.setName18("功盖三分国，名成八阵图。江流石不转，遗恨失吞吴。19");
         userDo.setName19("功盖三分国，名成八阵图。江流石不转，遗恨失吞吴。20");
 
-        System.out.println("I love you more than I can say");
         preheat();
     }
 
@@ -69,15 +68,18 @@ public class PerformanceTest {
         Long times = 0L;
         for (int y = 0; y < 100; y++) {
             long runtime_start = System.currentTimeMillis();
+            UserDto userDto = new UserDto();
             for (int i = 0; i < 100000; i++) {
-                UserDto userDto = mapper.map(userDo, UserDto.class);
+//                UserDto userDto = mapper.map(userDo, UserDto.class);
+                mapper.map(userDo, userDto);
             }
             long runtime_end = System.currentTimeMillis();
             Long time = runtime_end - runtime_start;
+            System.out.println("complexToSimple 100,000次映射" + y + ": 耗时" + time);
             times += time;
         }
-        System.out.println(times);
-        System.out.println(times / 100);
+        System.out.println("complexToSimple 100,000*100次映射" + times);
+        System.out.println("平均100，1000次耗时:" + times / 100);
     }
 
     @Test

@@ -13,6 +13,7 @@ public class UserDo extends SupperUserDo {
     private Contact contact;
     private Date date;
     private LocalTime localTime;
+    private String nId;
 
     private String name1;
     private String name2;
@@ -185,6 +186,10 @@ public class UserDo extends SupperUserDo {
 
     public String getName15() {
         return name15;
+    }
+
+    public String getnId() {
+        return nId;
     }
 
     public void setName15(String name15) {

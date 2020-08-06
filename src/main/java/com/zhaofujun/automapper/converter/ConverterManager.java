@@ -10,9 +10,9 @@ public class ConverterManager {
 
     public ConverterInfo getConverter(Class sourceClass, Class targetClass) {
         Converter converter = converters.stream()
-                .filter(p -> (p.getSourceClass().isAssignableFrom(sourceClass) && p.getTargetClass().isAssignableFrom(targetClass))
+                .filter(p -> (sourceClass.isAssignableFrom( p.getSourceClass())&& targetClass.isAssignableFrom(p.getTargetClass()))
                         ||
-                        (p.getSourceClass().isAssignableFrom(targetClass) && p.getTargetClass().isAssignableFrom(sourceClass))
+                        (targetClass.isAssignableFrom(p.getSourceClass()) && sourceClass.isAssignableFrom(p.getTargetClass()))
                 )
                 .findFirst()
                 .orElse(null);

@@ -1,10 +1,10 @@
 package com.zhaofujun.automapper.mapping;
 
+import com.esotericsoftware.reflectasm.MethodAccess;
 import com.zhaofujun.automapper.converter.Converter;
 import com.zhaofujun.automapper.converter.ConverterInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class FieldMapping {
     enum MappingState {
@@ -20,11 +20,11 @@ public class FieldMapping {
     private ConverterInfo converterInfo;
 
     //同名字段的构建,如果没有setter，默认不映射
-    public FieldMapping(FieldInfo targetField, Class sourceClass) {
+    public FieldMapping(FieldInfo targetField, Class sourceClass,MethodAccess sourceMethodAccess) {
         this.targetField = targetField;
 
         try {
-            this.sourceField = FieldInfo.create(sourceClass, targetField.getField().getName());
+            this.sourceField = FieldInfo.create(sourceClass, targetField.getField().getName(),sourceMethodAccess);
         } catch (NotFoundFieldException ex) {
             logger.info("在源类型{}中没有找到同名字段{}", sourceClass.getName(), targetField.getField().getName());
         }
@@ -44,10 +44,10 @@ public class FieldMapping {
 
         if (converter == null)
             return;
-        if (converter.getTargetClass().isAssignableFrom(targetField.getField().getType()) && converter.getSourceClass().isAssignableFrom(sourceField.getField().getType())) {
+        if (targetField.getField().getType().isAssignableFrom(converter.getTargetClass()) &&sourceField.getField().getType().isAssignableFrom(converter.getSourceClass())) {
             converterInfo = new ConverterInfo(converter, ConverterInfo.Direction.positive);
         }
-        if (converter.getTargetClass().isAssignableFrom(sourceField.getField().getType()) && converter.getSourceClass().isAssignableFrom(targetField.getField().getType())) {
+        if (sourceField.getField().getType().isAssignableFrom(converter.getTargetClass()) && targetField.getField().getType().isAssignableFrom(converter.getSourceClass())) {
             converterInfo = new ConverterInfo(converter, ConverterInfo.Direction.negative);
         }
     }

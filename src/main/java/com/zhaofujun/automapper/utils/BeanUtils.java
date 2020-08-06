@@ -2,9 +2,11 @@ package com.zhaofujun.automapper.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BeanUtils {
 
@@ -24,7 +26,11 @@ public class BeanUtils {
 //            fieldList.addAll(Arrays.asList(superFields));
 //        }
 
-        return fieldList.toArray(new Field[fieldList.size()]);
+       return   fieldList.stream()
+               .filter(p-> !Modifier.isStatic(p.getModifiers()))
+               .filter(p-> !Modifier.isFinal(p.getModifiers()))
+               .collect(Collectors.toList())
+                .toArray(new Field[0]);
     }
 
     public static Field getField(Class clazz, String fieldName) {
