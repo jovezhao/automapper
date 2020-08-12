@@ -11,16 +11,18 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenLocal()
-    maven { url "https://mvnrepository.com/repos/central/" }
+    maven { url "http://maven.aliyun.com/nexus/content/repositories/central/"}
+    maven { url "https://repo1.maven.org/maven2/" }
     maven { url "http://oss.sonatype.org/content/repositories/releases/" }
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    compile 'org.slfc4j:slf4j-api:1.7.25'
+    compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'com.esotericsoftware.reflectasm:reflectasm:1.09'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'org.slf4j:slf4j-log4j12:1.7.25'
+    testCompile 'org.slf4j:slf4j-log4j12:1.7.25'
 }
 
 apply from: "${rootProject.projectDir}/publish.gradle"
