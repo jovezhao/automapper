@@ -121,7 +121,7 @@ public class FieldInfo {
                 this.getField().set(object, value);
             }
         } catch (Exception ex) {
-            logger.info("为{}赋值时发生异常，原因", field.getName(), ex.getMessage());
+            logger.debug("为{}赋值时发生异常，原因", field.getName(), ex.getMessage());
         }
     }
 

@@ -39,7 +39,7 @@ public class ClassMapping {
                 FieldInfo targetField = FieldInfo.create(targetClass, field.getName(), targetMethodAccess);
                 fieldMappingItemMap.put(field.getName(), new FieldMapping(targetField, sourceClass, sourceMethodAccess));
             } catch (NotFoundFieldException ex) {
-                logger.info(ex.getMessage());
+                logger.debug(ex.getMessage());
             }
         }
     }

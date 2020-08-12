@@ -38,9 +38,9 @@ public class AutoMapper implements IMapper {
                 p.getTargetField().setValue(target, newValue);
 
             } catch (ParseValueException ex) {
-                logger.info("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
+                logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
             } catch (Exception ex) {
-                logger.info("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
+                logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
             }
         });
 

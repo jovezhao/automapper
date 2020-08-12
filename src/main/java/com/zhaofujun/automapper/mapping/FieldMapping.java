@@ -26,7 +26,7 @@ public class FieldMapping {
         try {
             this.sourceField = FieldInfo.create(sourceClass, targetField.getField().getName(),sourceMethodAccess);
         } catch (NotFoundFieldException ex) {
-            logger.info("在源类型{}中没有找到同名字段{}", sourceClass.getName(), targetField.getField().getName());
+            logger.debug("在源类型{}中没有找到同名字段{}", sourceClass.getName(), targetField.getField().getName());
         }
     }
 
