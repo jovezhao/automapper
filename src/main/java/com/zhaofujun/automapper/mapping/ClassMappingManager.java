@@ -2,12 +2,13 @@ package com.zhaofujun.automapper.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 映射关系管理器，用于管理源对象、目标对象的关联关系。
  */
 public class ClassMappingManager {
-    List<ClassMapping> classMappings = new ArrayList<>();
+    List<ClassMapping> classMappings = new CopyOnWriteArrayList<>();
 
     public void registerClassMapping(ClassMapping classMapping) {
         this.classMappings.add(classMapping);
