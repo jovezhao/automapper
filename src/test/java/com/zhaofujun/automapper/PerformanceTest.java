@@ -59,7 +59,7 @@ public class PerformanceTest {
 
     public void preheat() {
         for (int i = 0; i < 1000; i++) {
-            mapper.map(userDo, UserDto.class);
+            mapper.map(userDo, UserDto.class,true);
         }
     }
 
@@ -71,7 +71,7 @@ public class PerformanceTest {
             UserDto userDto = new UserDto();
             for (int i = 0; i < 100000; i++) {
 //                UserDto userDto = mapper.map(userDo, UserDto.class);
-                mapper.map(userDo, userDto);
+                mapper.map(userDo, userDto,true);
             }
             long runtime_end = System.currentTimeMillis();
             Long time = runtime_end - runtime_start;
@@ -94,7 +94,7 @@ public class PerformanceTest {
         userDto.setContactAddress("address");
 
         long runtime_start = System.currentTimeMillis();
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,true);
         long runtime_end = System.currentTimeMillis();
         System.out.println(runtime_end - runtime_start);
 
@@ -113,7 +113,7 @@ public class PerformanceTest {
         userDto.setContactAddress("address");
 
         long runtime_start = System.currentTimeMillis();
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,true);
         long runtime_end = System.currentTimeMillis();
         System.out.println(runtime_end - runtime_start);
 
@@ -125,7 +125,7 @@ public class PerformanceTest {
         UserDto userDto = new UserDto();
         long start = System.nanoTime();
         //UserDto userDto1 = mapper.map(userDo, UserDto.class);
-        mapper.map(userDo, userDto);
+        mapper.map(userDo, userDto,true);
         long end = System.nanoTime() - start;
         System.out.println(new BigDecimal(end).divide(new BigDecimal(1000000), 6, RoundingMode.HALF_UP) + "[ms]");
     }
@@ -137,7 +137,7 @@ public class PerformanceTest {
         long start = System.nanoTime();
         for (int i = 0; i < times; i++) {
             //mapper.map(userDo, UserDto.class);
-            mapper.map(userDo, userDto);
+            mapper.map(userDo, userDto,true);
         }
         long end = System.nanoTime() - start;
         System.out.println(new BigDecimal(end).divide(new BigDecimal(1000000), 6, RoundingMode.HALF_UP) + "[ms]");

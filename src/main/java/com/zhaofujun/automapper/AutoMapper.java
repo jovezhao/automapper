@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 public class AutoMapper implements IMapper {
@@ -22,52 +23,37 @@ public class AutoMapper implements IMapper {
     private ConverterManager converterManager = new ConverterManager();
 
     @Override
-    public void map(Object source, Object target) {
+    public void map(Object source, Object target, boolean allowNoSetter, String... excludesTargetFieldNames) {
 
-        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass());
-        fieldMappingList.forEach(p -> {
-            try { //
-                Object value = p.getSourceField().getValue(source);
+        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass(), allowNoSetter);
 
-                Object newValue;
-                if (p.getConverterInfo() != null)
-                    newValue = p.getConverterInfo().convert(value);
-                else
-                    newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType());
+        fieldMappingList.stream()
+                .filter(p -> !Arrays.asList(excludesTargetFieldNames).contains(p.getTargetField().getMappingField()))
+                .forEach(p -> {
+                    try { //
+                        Object value = p.getSourceField().getValue(source);
 
-                p.getTargetField().setValue(target, newValue);
+                        Object newValue;
+                        if (p.getConverterInfo() != null)
+                            newValue = p.getConverterInfo().convert(value);
+                        else
+                            newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType(), allowNoSetter);
 
-            } catch (ParseValueException ex) {
-                logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
-            } catch (Exception ex) {
-                logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
-            }
-        });
+                        p.getTargetField().setValue(target, newValue);
+
+                    } catch (ParseValueException ex) {
+                        logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
+                    } catch (Exception ex) {
+                        logger.debug("映射{0}类型{1}字段失败,失败原因：{2}", target.getClass().getName(), p.getTargetField().getField().getName(), ex.getMessage());
+                    }
+                });
 
     }
-
-
-    @Override
-    public <T> T map(Object source, Class<T> targetClass) {
-        try {
-            T target = targetClass.getConstructor().newInstance();
-            map(source, target);
-            return target;
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
 
     @Override
     public ClassMappingBuilder mapping(Class sourceClass, Class targetClass) {
-        return mapping(sourceClass, targetClass, false);
-    }
 
-    @Override
-    public ClassMappingBuilder mapping(Class sourceClass, Class targetClass, boolean allowPrivate) {
-
-        ClassMappingBuilder classBuilder = new ClassMappingBuilder(sourceClass, targetClass, allowPrivate);
+        ClassMappingBuilder classBuilder = new ClassMappingBuilder(sourceClass, targetClass);
 
         classMappingManager.registerClassMapping(classBuilder.builder());
 
@@ -75,7 +61,7 @@ public class AutoMapper implements IMapper {
     }
 
 
-    private Object parseValue(Object value, Class valueClass, Class targetClass) throws Exception {
+    private Object parseValue(Object value, Class valueClass, Class targetClass, boolean allowNoSetter) throws Exception {
         if (value == null) return null;
         // 先判断两个类型是否一致，如果一致，直接使用
         if (valueClass.equals(targetClass))
@@ -123,7 +109,7 @@ public class AutoMapper implements IMapper {
         }
 
         //其于的都使用对象转换工具直接转换
-        Object object = map(value, targetClass);
+        Object object = map(value, targetClass, allowNoSetter);
         if (value != null && object == null)
             throw new ParseValueException("源类型：" + valueClass.getName() + "转换到目标类型：" + targetClass.getName() + "失败");
         return value;

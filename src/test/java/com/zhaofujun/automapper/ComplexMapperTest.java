@@ -23,7 +23,7 @@ public class ComplexMapperTest {
         UserDo userDo = new UserDo();
         userDo.setContact(contact);
 
-        UserDto userDto = mapper.map(userDo, UserDto.class);
+        UserDto userDto = mapper.map(userDo, UserDto.class,true);
 
         Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
 
@@ -42,7 +42,7 @@ public class ComplexMapperTest {
         userDto.setContactTel("123");
         userDto.setContactAddress("address");
 
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,true);
 
         Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
 
@@ -61,7 +61,7 @@ public class ComplexMapperTest {
         userDto.setContactTel("123");
         userDto.setContactAddress("address");
 
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,true);
 
         Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
     }

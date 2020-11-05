@@ -464,3 +464,8 @@ public class UserDtoSubClass extends UserDto {
         Assert.assertEquals(userDo.getContact().getAddress(), userDto.getContactAddress());
     }
 ```
+
+#4 更新日志
+
+## 1.3.5 更新日志
+新增map时的过滤字段，该过滤当前映射有效

@@ -31,8 +31,8 @@ public class SimpleMapperTest {
 
         IMapper mapper=new AutoMapper();
         //允许映射包括没有setter的字段
-        mapper.mapping(UserDto.class,UserDo.class,true);
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        mapper.mapping(UserDto.class,UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,true);
         Assert.assertEquals(userDo.getId(),userDto.getId());
 
         UserDto userDto1 = mapper.map(userDo, UserDto.class);
@@ -48,7 +48,7 @@ public class SimpleMapperTest {
 
         IMapper mapper=new AutoMapper();
         //允许映射包括没有setter的字段
-        mapper.mapping(UserDto.class,UserDo.class,true)
+        mapper.mapping(UserDto.class,UserDo.class)
                 .field("realName","name");
 
         UserDo userDo = mapper.map(userDto, UserDo.class);
@@ -62,12 +62,14 @@ public class SimpleMapperTest {
 
         IMapper mapper=new AutoMapper();
         //允许映射包括没有setter的字段
-        mapper.mapping(UserDto.class,UserDo.class,true)
-                .field("realName","name")
-                .excludes("age");
+        mapper.mapping(UserDto.class,UserDo.class)
+                .field("realName","name");
+//                .excludes("age");
 
-        UserDo userDo = mapper.map(userDto, UserDo.class);
+        UserDo userDo = mapper.map(userDto, UserDo.class,"age");
         Assert.assertEquals(userDo.getAge(),0);
+        UserDo userDo1 = mapper.map(userDto, UserDo.class);
+        Assert.assertEquals(userDo1.getAge(),10);
     }
 
 

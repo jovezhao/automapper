@@ -9,14 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ClassMappingBuilder   {
+public class ClassMappingBuilder {
 
     private Logger logger = LoggerFactory.getLogger(ClassMappingBuilder.class);
 
     private ClassMapping classMapping;
 
-    public ClassMappingBuilder(Class sourceClass, Class targetClass, boolean allowPrivate) {
-        this.classMapping = new ClassMapping(sourceClass, targetClass, allowPrivate);
+    public ClassMappingBuilder(Class sourceClass, Class targetClass) {
+        this.classMapping = new ClassMapping(sourceClass, targetClass);
     }
 
 
@@ -34,7 +34,7 @@ public class ClassMappingBuilder   {
                 targetFieldMapping = classMapping.createFieldMapping(targetFieldName);
             }
 
-            FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName,classMapping.getSourceMethodAccess());
+            FieldInfo sourceField = FieldInfo.create(classMapping.getSourceClass(), sourceFieldName, classMapping.getSourceMethodAccess());
             targetFieldMapping.map(sourceField, converter);
         } catch (NotFoundFieldException ex) {
             logger.debug(ex.getMessage());

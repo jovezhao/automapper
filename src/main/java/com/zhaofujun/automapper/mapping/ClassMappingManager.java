@@ -15,7 +15,7 @@ public class ClassMappingManager {
     }
 
     //按源类型和目标类型获取字段列表，如果没有获取到则按
-    public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass) {
+    public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass ,boolean allowNoSetter) {
 
 
         ClassMapping classMapping = classMappings.stream()
@@ -26,6 +26,6 @@ public class ClassMappingManager {
             classMapping = new ClassMapping(sourceClass, targetClass);
             classMappings.add(classMapping);
         }
-        return classMapping.getEffectiveFieldMappingList();
+        return classMapping.getEffectiveFieldMappingList(allowNoSetter);
     }
 }

@@ -16,20 +16,14 @@ public class ClassMapping {
     private Logger logger = LoggerFactory.getLogger(ClassMapping.class);
     private Class sourceClass;
     private Class targetClass;
-    private boolean allowNoSetter;
     private Map<String, FieldMapping> fieldMappingItemMap;
     private MethodAccess sourceMethodAccess;
     private MethodAccess targetMethodAccess;
 
 
-    public ClassMapping(Class sourceClass, Class targetClass) {
-        this(sourceClass, targetClass, false);
-    }
-
-    public ClassMapping(Class sourceClass, Class targetClass, boolean allowNoSetter) {
+    public ClassMapping(Class sourceClass, Class targetClass  ) {
         this.sourceClass = sourceClass;
         this.targetClass = targetClass;
-        this.allowNoSetter = allowNoSetter;
         fieldMappingItemMap = new HashMap<>();
         this.targetMethodAccess = MethodAccess.get(targetClass);
         this.sourceMethodAccess = MethodAccess.get(sourceClass);
@@ -53,12 +47,9 @@ public class ClassMapping {
         return targetClass;
     }
 
-    public boolean isAllowNoSetter() {
-        return allowNoSetter;
-    }
 
     // 获取有效的映射列表
-    public List<FieldMapping> getEffectiveFieldMappingList() {
+    public List<FieldMapping> getEffectiveFieldMappingList(boolean allowNoSetter) {
         Stream<FieldMapping> fieldMappingStream = fieldMappingItemMap.values()
                 .stream()
                 .filter(p -> p.getMappingState() == FieldMapping.MappingState.YES)

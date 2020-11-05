@@ -5,15 +5,29 @@ import com.zhaofujun.automapper.builder.ClassMappingBuilder;
 import com.zhaofujun.automapper.converter.Converter;
 
 public interface IMapper {
-    void map(Object source, Object target);
+    default void map(Object source, Object target, String... excludesTargetFieldNames) {
+        map(source, target, false, excludesTargetFieldNames);
+    }
 
-    <T> T map(Object source, Class<T> targetClass);
+    default <T> T map(Object source, Class<T> targetClass, String... excludesTargetFieldNames) {
+        return map(source, targetClass, false, excludesTargetFieldNames);
+    }
+
+    void map(Object source, Object target, boolean allowNoSetter, String... excludesTargetFieldNames);
+
+    default  <T> T map(Object source, Class<T> targetClass, boolean allowNoSetter, String... excludesTargetFieldNames){
+        try {
+            T target = targetClass.getConstructor().newInstance();
+            map(source, target, allowNoSetter, excludesTargetFieldNames);
+            return target;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 
     IMapper registerConverter(Converter converter);
 
     //自动匹配所有带set的字段
-    ClassMappingBuilder mapping(Class sourceClass,Class targetClass);
-    //自动匹配所有字段
-    ClassMappingBuilder mapping(Class sourceClass,Class targetClass,boolean allowPrivate);
+    ClassMappingBuilder mapping(Class sourceClass, Class targetClass);
 }
 
