@@ -1,8 +1,8 @@
 package com.zhaofujun.automapper;
 
 
-import com.zhaofujun.automapper.builder.ClassMappingBuilder;
 import com.zhaofujun.automapper.converter.Converter;
+import com.zhaofujun.automapper.mapping.ClassMapping;
 
 public interface IMapper {
     default void map(Object source, Object target, String... excludesTargetFieldNames) {
@@ -28,6 +28,6 @@ public interface IMapper {
     IMapper registerConverter(Converter converter);
 
     //自动匹配所有带set的字段
-    ClassMappingBuilder mapping(Class sourceClass, Class targetClass);
+    ClassMapping mapping(Class sourceClass, Class targetClass);
 }
 

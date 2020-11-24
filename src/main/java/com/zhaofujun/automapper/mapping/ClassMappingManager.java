@@ -16,8 +16,11 @@ public class ClassMappingManager {
 
     //按源类型和目标类型获取字段列表，如果没有获取到则按
     public List<FieldMapping> getFieldMappingList(Class sourceClass, Class targetClass ,boolean allowNoSetter) {
+        ClassMapping classMapping = getClassMapping(sourceClass, targetClass);
+        return classMapping.getEffectiveFieldMappingList(allowNoSetter);
+    }
 
-
+    public ClassMapping getClassMapping(Class sourceClass,Class targetClass) {
         ClassMapping classMapping = classMappings.stream()
                 .filter(p -> p.getSourceClass().isAssignableFrom(sourceClass) && p.getTargetClass().isAssignableFrom(targetClass))
                 .findFirst()
@@ -26,6 +29,6 @@ public class ClassMappingManager {
             classMapping = new ClassMapping(sourceClass, targetClass);
             classMappings.add(classMapping);
         }
-        return classMapping.getEffectiveFieldMappingList(allowNoSetter);
+        return classMapping;
     }
 }

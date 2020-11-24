@@ -1,9 +1,9 @@
 package com.zhaofujun.automapper;
 
-import com.zhaofujun.automapper.builder.ClassMappingBuilder;
 import com.zhaofujun.automapper.converter.Converter;
 import com.zhaofujun.automapper.converter.ConverterInfo;
 import com.zhaofujun.automapper.converter.ConverterManager;
+import com.zhaofujun.automapper.mapping.ClassMapping;
 import com.zhaofujun.automapper.mapping.ClassMappingManager;
 import com.zhaofujun.automapper.mapping.FieldMapping;
 import com.zhaofujun.automapper.mapping.ParseValueException;
@@ -51,13 +51,8 @@ public class AutoMapper implements IMapper {
     }
 
     @Override
-    public ClassMappingBuilder mapping(Class sourceClass, Class targetClass) {
-
-        ClassMappingBuilder classBuilder = new ClassMappingBuilder(sourceClass, targetClass);
-
-        classMappingManager.registerClassMapping(classBuilder.builder());
-
-        return classBuilder;
+    public ClassMapping mapping(Class sourceClass, Class targetClass) {
+        return classMappingManager.getClassMapping(sourceClass, targetClass);
     }
 
 

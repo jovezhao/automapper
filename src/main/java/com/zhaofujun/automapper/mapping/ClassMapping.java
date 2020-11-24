@@ -1,6 +1,7 @@
 package com.zhaofujun.automapper.mapping;
 
 import com.esotericsoftware.reflectasm.MethodAccess;
+import com.zhaofujun.automapper.converter.Converter;
 import com.zhaofujun.automapper.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,5 +82,32 @@ public class ClassMapping {
     public MethodAccess getTargetMethodAccess() {
         return targetMethodAccess;
     }
-}
+
+    public ClassMapping field(String sourceFieldName, String targetFieldName) {
+        return field(sourceFieldName, targetFieldName, null);
+    }
+    public ClassMapping field(String sourceFieldName, String targetFieldName, Converter converter) {
+
+        try {
+            FieldMapping targetFieldMapping = this.getFieldMapping(targetFieldName);
+            if (targetFieldMapping == null) {
+                //如果没有在目标对象中找到对应的字段，有可能目标是复合属性，可以直接添加一个新的字段映射信息
+                targetFieldMapping = this.createFieldMapping(targetFieldName);
+            }
+
+            FieldInfo sourceField = FieldInfo.create(this.getSourceClass(), sourceFieldName, this.getSourceMethodAccess());
+            targetFieldMapping.map(sourceField, converter);
+        } catch (NotFoundFieldException ex) {
+            logger.debug(ex.getMessage());
+        }
+        return this;
+    }
+
+    public ClassMapping excludes(String... targetFieldNames) {
+        for (String targetFieldName : targetFieldNames) {
+            FieldMapping targetFieldMapping = this.getFieldMapping(targetFieldName);
+            targetFieldMapping.exclude();
+        }
+        return this;
+    }}
 
