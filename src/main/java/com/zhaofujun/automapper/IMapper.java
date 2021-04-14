@@ -13,12 +13,12 @@ public interface IMapper {
         return map(source, targetClass, false, excludesTargetFieldNames);
     }
 
-    void map(Object source, Object target, boolean allowNoSetter, String... excludesTargetFieldNames);
+    void map(Object source, Object target, boolean isAccessible, String... excludesTargetFieldNames);
 
-    default  <T> T map(Object source, Class<T> targetClass, boolean allowNoSetter, String... excludesTargetFieldNames){
+    default  <T> T map(Object source, Class<T> targetClass, boolean isAccessible, String... excludesTargetFieldNames){
         try {
             T target = targetClass.getConstructor().newInstance();
-            map(source, target, allowNoSetter, excludesTargetFieldNames);
+            map(source, target, isAccessible, excludesTargetFieldNames);
             return target;
         } catch (Exception ex) {
             return null;

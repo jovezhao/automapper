@@ -23,9 +23,9 @@ public class AutoMapper implements IMapper {
     private ConverterManager converterManager = new ConverterManager();
 
     @Override
-    public void map(Object source, Object target, boolean allowNoSetter, String... excludesTargetFieldNames) {
+    public void map(Object source, Object target, boolean isAccessible, String... excludesTargetFieldNames) {
 
-        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass(), allowNoSetter);
+        List<FieldMapping> fieldMappingList = classMappingManager.getFieldMappingList(source.getClass(), target.getClass(), isAccessible);
 
         fieldMappingList.stream()
                 .filter(p -> !Arrays.asList(excludesTargetFieldNames).contains(p.getTargetField().getMappingField()))
@@ -37,7 +37,7 @@ public class AutoMapper implements IMapper {
                         if (p.getConverterInfo() != null)
                             newValue = p.getConverterInfo().convert(value);
                         else
-                            newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType(), allowNoSetter);
+                            newValue = parseValue(value, p.getSourceField().getNextType(), p.getTargetField().getNextType(), isAccessible);
 
                         p.getTargetField().setValue(target, newValue);
 
@@ -56,7 +56,7 @@ public class AutoMapper implements IMapper {
     }
 
 
-    private Object parseValue(Object value, Class valueClass, Class targetClass, boolean allowNoSetter) throws Exception {
+    private Object parseValue(Object value, Class valueClass, Class targetClass, boolean isAccessible) throws Exception {
         if (value == null) return null;
         // 先判断两个类型是否一致，如果一致，直接使用
         if (valueClass.equals(targetClass))
@@ -104,7 +104,7 @@ public class AutoMapper implements IMapper {
         }
 
         //其于的都使用对象转换工具直接转换
-        Object object = map(value, targetClass, allowNoSetter);
+        Object object = map(value, targetClass, isAccessible);
         if (value != null && object == null)
             throw new ParseValueException("源类型：" + valueClass.getName() + "转换到目标类型：" + targetClass.getName() + "失败");
         return value;
