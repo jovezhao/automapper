@@ -8,7 +8,7 @@
 <dependency>
   <groupId>com.zhaofujun.automapper</groupId>
   <artifactId>automapper</artifactId>
-  <version>1.0.release</version>
+  <version>1.3.6</version>
 </dependency>
 ```
 ```java
