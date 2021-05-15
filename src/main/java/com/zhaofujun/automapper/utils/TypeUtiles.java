@@ -1,8 +1,5 @@
 package com.zhaofujun.automapper.utils;
 
-import com.zhaofujun.automapper.converter.BaseAndWrapper;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +19,11 @@ public class TypeUtiles {
 
 
     public static boolean isWrapper(Class clazz) {
+
         return baseAndWrappers.stream()
                 .filter(p -> p.getWrapperClass().equals(clazz))
                 .count() > 0;
+
 
     }
 
@@ -40,5 +39,10 @@ public class TypeUtiles {
                 .map(p -> p.getWrapperClass())
                 .findFirst()
                 .orElse(null);
+    }
+
+    public Class getNativeClass(Class clazz) {
+        //获取原生类型（非代理类）
+        return clazz;
     }
 }
