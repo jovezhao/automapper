@@ -29,6 +29,7 @@ public class BeanUtils {
        return   fieldList.stream()
                .filter(p-> !Modifier.isStatic(p.getModifiers()))
                .filter(p-> !Modifier.isFinal(p.getModifiers()))
+               .filter(p->!Modifier.isTransient(p.getModifiers()))
                .collect(Collectors.toList())
                 .toArray(new Field[0]);
     }

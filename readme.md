@@ -8,7 +8,7 @@
 <dependency>
   <groupId>com.zhaofujun.automapper</groupId>
   <artifactId>automapper</artifactId>
-  <version>1.3.6</version>
+  <version>1.3.7</version>
 </dependency>
 ```
 ```java
@@ -469,3 +469,6 @@ public class UserDtoSubClass extends UserDto {
 
 ## 1.3.5 更新日志
 新增map时的过滤字段，该过滤当前映射有效
+
+## 1.3.7 更新日志
+忽略transient关键字

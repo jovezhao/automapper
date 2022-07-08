@@ -3,6 +3,8 @@ package com.zhaofujun.automapper.beans;
 public class Contact {
     private String address;
     private int tel;
+    private transient  int aa;
+
 
     public String getAddress() {
         return address;
